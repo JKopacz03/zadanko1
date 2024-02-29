@@ -1,0 +1,10 @@
+services:
+  db:
+    container_name: 'javadb'
+    image: postgres:15-alpine3.18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: java-course
+    ports:
+      - "5432:5432"

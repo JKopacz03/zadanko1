@@ -1,0 +1,103 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+        objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+    <!--TEACHER-->
+    <changeSet id="1" author="jarek">
+        <createTable tableName="teacher">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="grade" type="VARCHAR(255)"/>
+            <column name="rate" type="DOUBLE"/>
+            <column name="deleted" type="BOOLEAN"/>
+        </createTable>
+        <sql>ALTER TABLE teacher ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;</sql>
+    </changeSet>
+
+    <!--CLASSROOM-->
+    <changeSet id="2" author="jarek">
+            <createTable tableName="classroom">
+                <column name="id" type="BIGINT">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="VARCHAR(255)"/>
+                <column name="location" type="INT"/>
+                <column name="deleted" type="BOOLEAN"/>
+            </createTable>
+        <sql>ALTER TABLE classroom ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;</sql>
+
+        </changeSet>
+
+    <!--LESSON-->
+    <changeSet id="3" author="jarek">
+        <createTable tableName="lesson">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="teacher_id" type="BIGINT"/>
+            <column name="classroom_id" type="BIGINT"/>
+            <column name="date_time" type="TIMESTAMP"/>
+            <column name="topic" type="VARCHAR(255)"/>
+            <column name="deleted" type="BOOLEAN"/>
+        </createTable>
+        <sql>ALTER TABLE lesson ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;</sql>
+
+        <addForeignKeyConstraint baseTableName="lesson"
+                                 baseColumnNames="teacher_id"
+                                 referencedTableName="teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_lesson_teacher"/>
+
+        <addForeignKeyConstraint baseTableName="lesson"
+                                 baseColumnNames="classroom_id"
+                                 referencedTableName="classroom"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_lesson_classroom"/>
+    </changeSet>
+
+    <!--STUDENT-->
+    <changeSet id="4" author="jarek">
+        <createTable tableName="student">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="grade" type="VARCHAR(255)"/>
+            <column name="registration_date" type="DATE"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="deleted" type="BOOLEAN"/>
+        </createTable>
+        <sql>ALTER TABLE student ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;</sql>
+    </changeSet>
+
+    <!--STUDENT-LESSON-->
+    <changeSet id="5" author="jarek">
+
+        <createTable tableName="students_lessons">
+            <column name="course_id" type="BIGINT"/>
+            <column name="student_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="students_lessons"
+                                 baseColumnNames="course_id"
+                                 referencedTableName="lesson"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_students_lessons_course"/>
+
+        <addForeignKeyConstraint baseTableName="students_lessons"
+                                 baseColumnNames="student_id"
+                                 referencedTableName="student"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_students_lessons_student"/>
+    </changeSet>
+</databaseChangeLog>
